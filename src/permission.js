@@ -15,6 +15,12 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
+          store.dispatch('GenerateRoutes').then(() => {
+            console.log('store.getters.addRouters:')
+            console.log(store.getters.addRouters)
+            router.addRoutes(store.getters.addRouters)
+            next({ ...to, replace: true })
+          })
           next()
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {

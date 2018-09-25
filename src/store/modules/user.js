@@ -1,5 +1,8 @@
-import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import Qs from 'qs'
+import request from '@/utils/request'
+import axios from 'axios'
+import { Message } from 'element-ui'
 
 const user = {
   state: {
@@ -28,13 +31,38 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      const password = userInfo.password
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
+        const data = {
+          username: username,
+          password: password,
+          grant_type: 'password',
+          scope: 'all',
+          client_id: 'vue-admin',
+          client_secret: 'secret',
+          validatecode: userInfo.validateCode,
+          imgToken: userInfo.imgToken
+        }
+        axios.post('/api/oauth/token', data, {
+          transformRequest: [function(data) {
+            data = Qs.stringify(data)
+            return data
+          }],
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          // baseURL: process.env.BASE_API, // api的base_url
+          timeout: 15000, // 请求超时时间
+          withCredentials: true
+        }).then(response => {
           const data = response.data
-          setToken(data.token)
-          commit('SET_TOKEN', data.token)
+          setToken(data.access_token)
+          commit('SET_TOKEN', data.access_token)
+          console.log('登录成功')
+          console.log(data)
           resolve()
         }).catch(error => {
+          const data = error.response.data
+          console.log(data)
+          Message.error(data.message)
           reject(error)
         })
       })
@@ -43,15 +71,14 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
+        request.get('/api/user/me').then(response => {
           const data = response.data
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
+          if (data.principal) {
+            commit('SET_NAME', data.name)
+            commit('SET_ROLES', data.authorities)
           } else {
-            reject('getInfo: roles must be a non-null array !')
+            reject('getInfo: roles must be a non-null!')
           }
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -62,14 +89,10 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        removeToken()
+        resolve()
       })
     },
 

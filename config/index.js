@@ -9,7 +9,23 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/oauth/**': {
+        target: 'http://localhost:8080'
+      },
+      '/api/**': {
+        target: 'http://localhost:8080'
+      },
+      '/swagger-ui.html': {
+        target: 'http://localhost:8080'
+      },
+      '/webjars/**': {
+        target: 'http://localhost:8080'
+      },
+      '/swagger-resources/**': {
+        target: 'http://localhost:8080'
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

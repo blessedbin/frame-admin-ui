@@ -1,82 +1,77 @@
 <template>
-  <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-      <h3 class="title">vue-admin-template</h3>
+  <div class="login-container" :style="background">
+    <el-form class="login-form" auto-complete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+      <h3 class="title">vue-element-admin</h3>
       <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
+        <span class="svg-container svg-container_login">
+          <svg-icon icon-class="user" ></svg-icon>
         </span>
-        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="username" />
+        <el-input name="username" type="text" v-model="loginForm.username" auto-complete="on" placeholder="用户名" ></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password" />
+          <svg-icon icon-class="password"></svg-icon>
         </span>
-        <el-input
-          :type="pwdType"
-          v-model="loginForm.password"
-          name="password"
-          auto-complete="on"
-          placeholder="password"
-          @keyup.enter.native="handleLogin" />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon icon-class="eye" />
-        </span>
+        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" auto-complete="on"
+                  placeholder="密码"></el-input>
+        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" ></svg-icon></span>
+      </el-form-item>
+      <el-form-item prop="vadatecode">
+        <el-row>
+          <el-col :span="1">
+            <span class="svg-container">
+              <svg-icon icon-class="password"></svg-icon>
+            </span>
+          </el-col>
+          <el-col :span="11">
+            <el-input name="validateCode" v-model="loginForm.validateCode" placeholder="验证码"></el-input>
+          </el-col>
+          <el-col :span="12">
+            <img :src="validateImageSrc" @click="loadValidateImageSrc"
+                 style="margin-top: 12px;margin-bottom: -2px">
+          </el-col>
+        </el-row>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
-          Sign in
+        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
+          登  录
         </el-button>
       </el-form-item>
-      <div class="tips">
+      <!--<div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: admin</span>
-      </div>
+      </div>-->
     </el-form>
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
-
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
-    }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
-      } else {
-        callback()
-      }
-    }
     return {
+      validateImageSrc: '',
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '',
+        password: '',
+        validateCode: '',
+        imgToken: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
+        username: [{ required: true, trigger: 'blur', message: '不能为空' }],
+        password: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
       loading: false,
       pwdType: 'password',
-      redirect: undefined
+      background: {
+        backgroundImage: 'url(' + require('@/assets/images/background.jpg') + ')',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover'
+      }
     }
   },
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
-    }
+  mounted() {
+    this.loadValidateImageSrc()
   },
   methods: {
     showPwd() {
@@ -87,19 +82,30 @@ export default {
       }
     },
     handleLogin() {
+      const self = this
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch(() => {
+            this.$router.push({ path: '/' })
+          }).catch((error) => {
             this.loading = false
+            console.log(error)
+            // 重新加载验证码
+            self.loadValidateImageSrc()
           })
         } else {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    loadValidateImageSrc() {
+      const self = this
+      self.$request.get('/api/ucenter/code/captacha').then(response => {
+        self.validateImageSrc = response.data.img
+        self.loginForm.imgToken = response.data.imgToken
       })
     }
   }
@@ -107,7 +113,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-$bg:#2d3a4b;
+$bg: rgba(164, 207, 253, 0.01);
 $light_gray:#eee;
 
 /* reset element-ui css */
@@ -124,10 +130,6 @@ $light_gray:#eee;
       padding: 12px 5px 12px 15px;
       color: $light_gray;
       height: 47px;
-      &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: #fff !important;
-      }
     }
   }
   .el-form-item {
@@ -154,7 +156,6 @@ $light_gray:#eee;
     left: 0;
     right: 0;
     width: 520px;
-    max-width: 100%;
     padding: 35px 35px 15px 35px;
     margin: 120px auto;
   }
@@ -174,6 +175,9 @@ $light_gray:#eee;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
+    &_login {
+      font-size: 20px;
+    }
   }
   .title {
     font-size: 26px;

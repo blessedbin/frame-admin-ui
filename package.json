@@ -19,9 +19,15 @@
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
+    "qs": "latest",
+    "sockjs-client": "latest",
+    "v-calendar": "^0.9.7",
     "vue": "2.5.17",
+    "vue-core-image-upload": "^2.4.11",
     "vue-router": "3.0.1",
-    "vuex": "3.0.1"
+    "vuedraggable": "^2.16.0",
+    "vuex": "3.0.1",
+    "webstomp-client": "^1.2.4"
   },
   "devDependencies": {
     "autoprefixer": "8.5.0",
