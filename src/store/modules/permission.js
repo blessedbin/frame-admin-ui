@@ -90,7 +90,7 @@ const permission = {
           const router = generateRouter(state.menus)
           // 增加404
           router.push({ path: '*', redirect: '/404', hidden: true })
-          console.log('generateRouter.........')
+          console.log('加载动态路由.........')
           console.log(router)
           //  /////////////////////////
           commit('SET_ROUTERS', router)

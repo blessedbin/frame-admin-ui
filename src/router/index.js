@@ -27,17 +27,6 @@ export const constantRouterMap = [
   { path: '/', redirect: '/dashboard/index', hidden: true },
 
   {
-    path: '/user',
-    component: Layout,
-    name: 'person-user',
-    hidden: true,
-    children: [{
-      path: 'avatar',
-      component: () => import('@/views/user/edit-avatar'),
-      meta: { title: 'Dashboard', icon: 'form' }
-    }]
-  },
-  {
     path: '/dashboard',
     component: Layout,
     redirect: '/dashboard/index',
@@ -53,7 +42,7 @@ export const constantRouterMap = [
     path: '/menu_manage',
     component: () => import('../views/layout/Layout'),
     redirect: '/dashboard/index',
-    name: 'Dashboard',
+    name: 'Dashboard11',
     children: [{
       path: 'menu',
       name: 'menu-manage212',

@@ -3,55 +3,76 @@
 
     <pan-thumb :image="image"></pan-thumb>
 
-    <el-button type="primary" icon="upload" style="position: absolute;bottom: 15px;margin-left: 40px;"
-               @click="show=true">Change avatar
-    </el-button>
-
-    <vue-core-image-upload
-      class="btn btn-primary"
-      :crop="false"
-      text="上传"
-      @imageuploaded="imageuploaded"
-      :data="data"
-      :max-file-size="5242880"
-      url="http://101.198.151.190/api/upload.php" >
-    </vue-core-image-upload>
-
+    <el-button class="btn" @click="toggleShow" type="primary">设置头像</el-button>
+    <my-upload field="img" @crop-success="cropSuccess" @crop-upload-success="cropUploadSuccess"
+               @crop-upload-fail="cropUploadFail"
+               v-model="show" :width="300" :height="300"
+               url="/api/user/avatar.do" :params="params" :headers="headers"
+               img-format="png"></my-upload>
+    <img :src="imgDataUrl">
   </div>
 </template>
 
 <script>
 import PanThumb from '@/components/PanThumb'
-import VueCoreImageUpload from 'vue-core-image-upload'
+import 'babel-polyfill' // es6 shim
+import myUpload from 'vue-image-crop-upload'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'EditAvatar',
   components: {
     PanThumb,
-    'vue-core-image-upload': VueCoreImageUpload
+    myUpload
   },
   data() {
     return {
-      imagecropperShow: false,
-      imagecropperKey: 0,
-      show: false,
       image: 'http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png',
-      src: 'http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png',
-      data: {}
+      show: false,
+      params: {
+        token: '123456798',
+        name: 'avatar'
+      },
+      headers: {
+        Authorization: 'Bearer ' + getToken()
+      },
+      imgDataUrl: '' // the datebase64 url of created image
     }
   },
   methods: {
-    cropSuccess(resData) {
-      this.imagecropperShow = false
-      this.imagecropperKey = this.imagecropperKey + 1
-      this.image = resData.files.avatar
+    toggleShow() {
+      this.show = !this.show
     },
-    close() {
-      this.imagecropperShow = false
+    /**
+     * crop success
+     *
+     * [param] imgDataUrl
+     * [param] field
+     */
+    cropSuccess(imgDataUrl, field) {
+      console.log('-------- crop success --------')
+      this.imgDataUrl = imgDataUrl
     },
-    imageuploaded(res) {
-      if (res.errcode === 0) {
-        this.src = 'http://img1.vued.vanthink.cn/vued751d13a9cb5376b89cb6719e86f591f3.png'
-      }
+    /**
+     * upload success
+     *
+     * [param] jsonData   服务器返回数据，已进行json转码
+     * [param] field
+     */
+    cropUploadSuccess(jsonData, field) {
+      console.log('-------- upload success --------')
+      console.log(jsonData)
+      console.log('field: ' + field)
+    },
+    /**
+     * upload fail
+     *
+     * [param] status    server api return error status, like 500
+     * [param] field
+     */
+    cropUploadFail(status, field) {
+      console.log('-------- upload fail --------')
+      console.log(status)
+      console.log('field: ' + field)
     }
   }
 }

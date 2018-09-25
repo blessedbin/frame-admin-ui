@@ -16,9 +16,8 @@ router.beforeEach((to, from, next) => {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           store.dispatch('GenerateRoutes').then(() => {
-            console.log('store.getters.addRouters:')
-            console.log(store.getters.addRouters)
             router.addRoutes(store.getters.addRouters)
+            console.log('路由加载完成..................')
             next({ ...to, replace: true })
           })
           next()
