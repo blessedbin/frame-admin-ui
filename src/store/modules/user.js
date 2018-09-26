@@ -9,7 +9,7 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    info: null
   },
 
   mutations: {
@@ -22,8 +22,8 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_INFO: (state, info) => {
+      state.info = info
     }
   },
 
@@ -73,11 +73,11 @@ const user = {
       return new Promise((resolve, reject) => {
         request.get('/api/user/me').then(response => {
           const data = response.data
-          if (data.principal) {
-            commit('SET_NAME', data.name)
-            commit('SET_ROLES', data.authorities)
+          if (data) {
+            commit('SET_NAME', data.username)
+            commit('SET_INFO', data)
           } else {
-            reject('getInfo: roles must be a non-null!')
+            reject('getInfo: info must not null')
           }
           resolve(response)
         }).catch(error => {

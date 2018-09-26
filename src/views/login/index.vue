@@ -103,7 +103,7 @@ export default {
     },
     loadValidateImageSrc() {
       const self = this
-      self.$request.get('/api/ucenter/code/captacha').then(response => {
+      self.$request.get('/api/frame-auth/code/captacha').then(response => {
         self.validateImageSrc = response.data.img
         self.loginForm.imgToken = response.data.imgToken
       })

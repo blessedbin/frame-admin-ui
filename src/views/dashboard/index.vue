@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">roles:<span v-for="role in roles" :key="role.authority">{{ role }}</span></div>
+    <div class="dashboard-text">info:<pre>{{ info }}</pre></div>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
   computed: {
     ...mapGetters([
       'name',
-      'roles'
+      'info'
     ])
   }
 }
@@ -25,8 +25,8 @@ export default {
     margin: 30px;
   }
   &-text {
-    font-size: 30px;
-    line-height: 46px;
+    font-size: 20px;
+    line-height: 26px;
   }
 }
 </style>
