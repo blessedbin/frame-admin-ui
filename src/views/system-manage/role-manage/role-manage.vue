@@ -217,7 +217,7 @@ export default {
       self.dialogEditRolePermission.checkboxCheckList = []
       self.$request.get('/api/ucenter/sys/menu/menu_tree.json?roleId=' + id).then(response => {
         self.dialogEditRolePermission.treeData = response.data.treeList
-        self.dialogEditRolePermission.checkedList = response.data.selectedList
+        self.dialogEditRolePermission.checkedList = response.data.checked
         self.dialogEditRolePermission.visible = true
       })
     },
@@ -228,6 +228,18 @@ export default {
       const self = this
       self.$request.get('/api/ucenter/sys/menu/menu_details.json?id=' + id).then(response => {
         self.dialogEditRolePermission.operationDetails = response.data.operationDetails
+
+        if (self.dialogEditRolePermission.operationDetails != null) {
+          self.dialogEditRolePermission.checkboxCheckList = self.dialogEditRolePermission.checkedList.filter(value => {
+            var flag = false
+            self.dialogEditRolePermission.operationDetails.forEach(value1 => {
+              if (value === value1.id) {
+                flag = true
+              }
+            })
+            return flag
+          }).map(value => String(value))
+        }
       })
     }
   }
