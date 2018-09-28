@@ -50,14 +50,22 @@
     </div>
 
     <!--编辑权限-->
-    <el-dialog title="编辑权限" :visible.sync="dialogEditRolePermission.visible" width="400px">
+    <el-dialog title="编辑权限" :visible.sync="dialogEditRolePermission.visible" width="60%">
       <div >
-        <el-row>
-          <el-col :span="20">
+        <el-row :gutter="5">
+          <el-col :span="10">
             <el-tree :data="dialogEditRolePermission.treeData" show-checkbox ref="permissionTree"
-                     :default-expanded-keys="dialogEditRolePermission.checkedList"
+                     :default-expanded-keys="dialogEditRolePermission.checkedList" @node-click="dialogERP_TreeNodeClick"
                      node-key="id">
             </el-tree>
+          </el-col>
+          <el-col :span="14">
+            <div>
+              <el-checkbox-group v-model="dialogEditRolePermission.checkboxCheckList">
+                <el-checkbox v-for="operation in dialogEditRolePermission.operationDetails"
+                             :label="String(operation.id)" :key="operation.id">{{ operation.name }}</el-checkbox>
+              </el-checkbox-group>
+            </div>
           </el-col>
         </el-row>
 
@@ -73,12 +81,10 @@
 
 <script>
 import datatable from '@/components/DataTable/datatable.vue'
-import apiDraggable from './api-draggable'
 export default {
   name: 'ManageRole',
   components: {
-    datatable,
-    apiDraggable
+    datatable
   },
   data() {
     return {
@@ -121,7 +127,9 @@ export default {
         visible: false,
         treeData: [],
         checkedList: [],
-        id: ''
+        id: '',
+        checkboxCheckList: [],
+        operationDetails: []
       }
     }
   },
@@ -134,17 +142,17 @@ export default {
     'dialogEditRolePermission.checkedList': function(value) {
       const self = this
       this.$nextTick(function() {
-        // DOM is now updated
-        // `this` is bound to the current instance
         // 筛选叶子节点
-        const selectedKeys = value.filter(function(currentValue, index, array) {
-          const node = self.$refs.permissionTree.getNode(currentValue)
-          if (node === null) {
-            return false
-          }
-          return node.isLeaf
-        })
-        this.$refs.permissionTree.setCheckedKeys(selectedKeys)
+        if (value) {
+          const selectedKeys = value.filter(function(currentValue, index, array) {
+            const node = self.$refs.permissionTree.getNode(currentValue)
+            if (node === null) {
+              return false
+            }
+            return node.isLeaf
+          })
+          this.$refs.permissionTree.setCheckedKeys(selectedKeys)
+        }
       })
     }
   },
@@ -192,9 +200,10 @@ export default {
       const checkedKeys = self.$refs.permissionTree.getCheckedKeys()
       const halfCheckedNodes = self.$refs.permissionTree.getHalfCheckedKeys()
       const roleId = self.dialogEditRolePermission.id
+      console.log(self.dialogEditRolePermission.checkboxCheckList)
       const data = {
         id: roleId,
-        checkedList: checkedKeys.concat(halfCheckedNodes)
+        checkedList: checkedKeys.concat(halfCheckedNodes, self.dialogEditRolePermission.checkboxCheckList)
       }
       self.$request.put(self.baseUrl + '/role_permission.do', data).then(response => {
         self.$message.success(response.message)
@@ -205,10 +214,20 @@ export default {
       const self = this
       const id = row.id
       self.dialogEditRolePermission.id = id
+      self.dialogEditRolePermission.checkboxCheckList = []
       self.$request.get('/api/ucenter/sys/menu/menu_tree.json?roleId=' + id).then(response => {
         self.dialogEditRolePermission.treeData = response.data.treeList
         self.dialogEditRolePermission.checkedList = response.data.selectedList
         self.dialogEditRolePermission.visible = true
+      })
+    },
+    // /////////////////////////////////////////////////////
+    dialogERP_TreeNodeClick(data) {
+      console.log(data)
+      const id = data.id
+      const self = this
+      self.$request.get('/api/ucenter/sys/menu/menu_details.json?id=' + id).then(response => {
+        self.dialogEditRolePermission.operationDetails = response.data.operationDetails
       })
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="main-contain-holder">
 
-    <datatable :columns="columns" :url="baseUrl" ref="datatable" :show-edit-row-button="false" :show-delete-row-button="false"
+    <datatable :columns="columns" :url="baseUrl" ref="datatable" :showIndex="true" :show-edit-row-button="false" :show-delete-row-button="false"
                title="用户列表">
       <div slot="button">
         <el-button size="mini" type="primary" @click="dialogAddUser.visible = true">添加</el-button>

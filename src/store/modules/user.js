@@ -43,7 +43,7 @@ const user = {
           validatecode: userInfo.validateCode,
           imgToken: userInfo.imgToken
         }
-        axios.post('/api/oauth/token', data, {
+        axios.post('/api/auth/oauth/token', data, {
           transformRequest: [function(data) {
             data = Qs.stringify(data)
             return data

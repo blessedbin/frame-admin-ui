@@ -27,7 +27,7 @@
 
       </div>
       <div>
-        <el-table :data="data" stripe border @row-dblclick="rowDbClick" :max-height="maxHeight"
+        <el-table :data="data" stripe border @row-dblclick="rowDbClick"
                   :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange"
                   :row-class-name="tableRowClassName" @row-click="checkImage" ref="table"
                   v-loading="loading">
@@ -37,8 +37,8 @@
           <el-table-column :label="column.label"
                            :prop="column.prop"
                            :width="column.width != null ? column.width : {}"
-                           v-for="(column) in columns"
-                           :key="column.label">
+                           v-for="column in columns"
+                           :key="column.prop">
             <template slot-scope="scope">
               <span v-if="column.filter">
                 {{ Vue.filter(column['filter'])(scope.row[column.prop]) }}
@@ -92,7 +92,9 @@ export default {
     columns: {
       type: Array,
       require: true,
-      default: () => []
+      default: function() {
+        return []
+      }
     },
     showIndex: {
       type: Boolean,

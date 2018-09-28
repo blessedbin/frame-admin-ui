@@ -1,7 +1,7 @@
 <template>
   <div class="main-contain-holder">
 
-    <pan-thumb :image="image" :width="200" :height="200"></pan-thumb>
+    <pan-thumb :image="image" width="200" height="200"></pan-thumb>
 
     <el-button class="btn" @click="toggleShow" type="primary">设置头像</el-button>
     <my-upload field="img" @crop-success="cropSuccess" @crop-upload-success="cropUploadSuccess"
