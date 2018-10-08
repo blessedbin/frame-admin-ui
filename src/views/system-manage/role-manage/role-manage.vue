@@ -54,8 +54,8 @@
       <div >
         <el-row :gutter="5">
           <el-col :span="10">
-            <el-tree :data="dialogEditRolePermission.treeData" show-checkbox ref="permissionTree"
-                     :default-expanded-keys="dialogEditRolePermission.checkedList" @node-click="dialogERP_TreeNodeClick"
+            <el-tree :data="dialogEditRolePermission.treeData" show-checkbox ref="permissionTree" :expand-on-click-node="false"
+                     :default-expanded-keys="dialogEditRolePermission_default_expanded_keys" @node-click="dialogERP_TreeNodeClick"
                      node-key="id">
             </el-tree>
           </el-col>
@@ -136,6 +136,33 @@ export default {
   computed: {
     dialogAddRoleEditAble: function() {
       return this.dialogAddRole.type === 'edit'
+    },
+    /**
+     * TODO 自动展开逻辑
+     * @returns {Array}
+     */
+    dialogEditRolePermission_default_expanded_keys: function() {
+      const self = this
+      var nodes = []
+      const list = this.dialogEditRolePermission.checkedList
+      const addParent = function(value) {
+        var nodes = []
+        const node = self.$refs.permissionTree.getNode(value)
+        if (node != null) {
+          console.log(node)
+          nodes.push(node.data.id)
+          // nodes = nodes.concat(addParent(node.parent))
+        }
+        return nodes
+      }
+      self.$nextTick(function() {
+        list.forEach(value => {
+          const items = addParent(value)
+          nodes = nodes.concat(items)
+        })
+      })
+      console.log(nodes)
+      return nodes
     }
   },
   watch: {
@@ -215,6 +242,7 @@ export default {
       const id = row.id
       self.dialogEditRolePermission.id = id
       self.dialogEditRolePermission.checkboxCheckList = []
+      self.dialogEditRolePermission.operationDetails = []
       self.$request.get('/api/ucenter/sys/menu/menu_tree.json?roleId=' + id).then(response => {
         self.dialogEditRolePermission.treeData = response.data.treeList
         self.dialogEditRolePermission.checkedList = response.data.checked
@@ -239,6 +267,8 @@ export default {
             })
             return flag
           }).map(value => String(value))
+        } else {
+          self.dialogEditRolePermission.operationDetails = []
         }
       })
     }
