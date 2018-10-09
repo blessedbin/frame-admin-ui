@@ -8,7 +8,7 @@ const user = {
   state: {
     token: getToken(),
     name: '',
-    avatar: '',
+    avatar: null,
     info: null
   },
 
@@ -76,6 +76,12 @@ const user = {
           if (data) {
             commit('SET_NAME', data.username)
             commit('SET_INFO', data)
+            if (data.avatar) {
+              commit('SET_AVATAR', 'http://192.168.177.129/' + data.avatar)
+            } else {
+              commit('SET_AVATAR', require('@/assets/images/default_avatar.jpg'))
+            }
+            // 设置头像
           } else {
             reject('getInfo: info must not null')
           }

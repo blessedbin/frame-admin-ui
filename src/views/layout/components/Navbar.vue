@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      avatar: 'http://192.168.177.129/' + store.getters.info.avatar
+      avatar: store.getters.avatar
     }
   },
   computed: {

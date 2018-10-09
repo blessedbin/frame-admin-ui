@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      image: 'http://192.168.177.129/' + store.getters.info.avatar,
+      image: store.getters.avatar,
       show: false,
       params: {
         token: '123456798',

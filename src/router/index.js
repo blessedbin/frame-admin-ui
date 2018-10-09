@@ -36,9 +36,9 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: 'Dashboard', icon: 'form' }
     }]
-  },
+  }
 
-  {
+  /* {
     path: '/menu_manage',
     component: () => import('../views/layout/Layout'),
     redirect: '/dashboard/index',
@@ -49,7 +49,7 @@ export const constantRouterMap = [
       component: () => import('@/views/system-manage/menu-manage/menu-tree-table.vue'),
       meta: { title: '菜单管理', icon: 'tree' }
     }]
-  }
+  }*/
 ]
 
 export default new Router({
