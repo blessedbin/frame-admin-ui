@@ -76,7 +76,7 @@
      */
 import Vue from 'vue'
 export default {
-  name: 'Datatable',
+  name: 'datatable',
   props: {
     // 请求地址
     url: {

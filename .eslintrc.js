@@ -22,7 +22,7 @@ module.exports = {
       }
     }],
     "vue/attributes-order": [2, {order: []}],
-    "vue/name-property-casing": ["error", "PascalCase"],
+    "vue/name-property-casing": ["error", "kebab-case"],
     "vue/html-self-closing": ["error", {
       "html": {
         "void": "never",

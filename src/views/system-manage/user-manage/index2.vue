@@ -7,11 +7,18 @@
         <el-button size="mini" type="primary" @click="dialogAddUser.visible = true">添加</el-button>
       </div>
       <div>
-        <el-table-column label="操作" width="250px" fixed="right">
+        <el-table-column label="操作" width="200px" fixed="right">
           <template slot-scope="scope">
-            <el-button type="primary" round size="mini" @click="handleEditRow(scope.row)">编辑</el-button>
             <el-button type="info" round size="mini" @click="handleEditRoleRow(scope.row)">编辑角色</el-button>
-            <el-button type="danger" size="mini" round @click="handleDeleteRow(scope.row)">删除</el-button>
+            <el-dropdown @command="(command) => {dialogEditUser_handleCommand(command, scope.row)}">
+              <el-button type="primary" size="mini" round>
+                其他<i class="el-icon-arrow-down el-icon--right"/>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="reset_password">重置密码</el-dropdown-item>
+                <el-dropdown-item command="delete">删除用户</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </div>
@@ -58,6 +65,15 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogEditUserRole.visible = false">取 消</el-button>
         <el-button type="primary" @click="handleEditUserRoleSubmit">保  存</el-button>
+      </span>
+    </el-dialog>
+
+    <!--编辑用户-->
+    <el-dialog title="编辑用户" :visible.sync="dialogEditUser.visible">
+      <div>编辑用户</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogEditUser.visible = false">取 消</el-button>
+        <el-button type="primary">保  存</el-button>
       </span>
     </el-dialog>
 
@@ -117,6 +133,9 @@ export default {
         selectedRole: [],
         roleList: [],
         uuid: ''
+      },
+      dialogEditUser: {
+        visible: false
       }
     }
   },
@@ -151,21 +170,6 @@ export default {
         self.dialogAddUser.cascaderDisabled = false
       })
     },
-    handleDeleteRow(row) {
-      console.log(row)
-      const self = this
-      this.$confirm('删除, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 删除数据事件
-        self.$request.delete(self.baseUrl + '?uuid=' + row.uuid).then(response => {
-          self.$message.success(response.message)
-          self.$refs.datatable.refreshData()
-        })
-      })
-    },
     handleEditRow(row) {
       console.log(row)
     },
@@ -188,6 +192,39 @@ export default {
         self.$message.success(response.message)
         self.dialogEditUserRole.visible = false
       })
+    },
+    // //////////////////////////////////////////////////////
+    dialogEditUser_handleCommand(command, row) {
+      console.log('-----------------------------')
+      console.log(command)
+      console.log(row)
+      const self = this
+      // 重置密码
+      if (command === 'reset_password') {
+        this.$confirm('重置密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // 执行
+          self.$request.get('/api/ucenter/sys/user/reset_password.do?uuid=' + row.uuid).then(response => {
+            self.$message.success(response.message)
+          })
+        })
+        // 删除用户
+      } else if (command === 'delete') {
+        this.$confirm('删除, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // 删除数据事件
+          self.$request.delete(self.baseUrl + '?uuid=' + row.uuid).then(response => {
+            self.$message.success(response.message)
+            self.$refs.datatable.refreshData()
+          })
+        })
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-container">
+    <admin-dashboard></admin-dashboard>
     <div class="dashboard-text">name:{{ name }}</div>
     <div class="dashboard-text">info:<pre>{{ info }}</pre></div>
   </div>
@@ -7,9 +8,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import adminDashboard from './admin/index'
 export default {
   name: 'Dashboard',
+  components: {
+    adminDashboard
+  },
   computed: {
     ...mapGetters([
       'name',
