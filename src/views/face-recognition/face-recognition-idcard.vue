@@ -38,7 +38,7 @@ import { getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
 import createISSOnlineDevice from './ZKIDROnline'
 export default {
-  name: 'FaceRecognitionIdcard',
+  name: 'face-recognition-idcard',
   components: {
   },
   data() {

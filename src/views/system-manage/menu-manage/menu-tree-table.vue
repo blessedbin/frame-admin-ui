@@ -288,7 +288,7 @@
 <script>
 import datatable from '@/components/DataTable/datatable.vue'
 export default {
-  name: 'MenuTreeTable',
+  name: 'menu-tree-table',
   components: {
     datatable
   },

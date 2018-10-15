@@ -39,7 +39,7 @@ import { validateURL } from '@/utils/validate'
 import Item from './Item'
 
 export default {
-  name: 'SidebarItem',
+  name: 'sidebar-item',
   components: { Item },
   props: {
     // route object

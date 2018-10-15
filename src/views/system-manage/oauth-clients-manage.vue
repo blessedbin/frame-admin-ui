@@ -191,7 +191,7 @@
 <script>
 import datatable from '@/components/DataTable/datatable.vue'
 export default {
-  name: 'OauthClientsManage',
+  name: 'oauth-clients-manage',
   components: {
     datatable
   },

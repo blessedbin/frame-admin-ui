@@ -83,7 +83,7 @@
 <script>
 import datatable from '@/components/DataTable/datatable.vue'
 export default {
-  name: 'Index2',
+  name: 'index2',
   components: {
     datatable
   },

@@ -24,7 +24,7 @@ import Stomp from 'webstomp-client'
 import { getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'CameraTest',
+  name: 'camera-test',
   components: {
   },
   data() {

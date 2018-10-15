@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  name: 'PermissionManage',
+  name: 'permission-manage',
   data() {
     return {
       table: {

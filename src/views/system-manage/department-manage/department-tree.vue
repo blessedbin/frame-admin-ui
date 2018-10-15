@@ -16,7 +16,7 @@
    * @event: selected 参数：selectedNode 被选择的node
    */
 export default {
-  name: 'DepartmentTree',
+  name: 'department-tree',
   data() {
     return {
       visible: false,

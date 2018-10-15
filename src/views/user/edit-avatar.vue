@@ -19,7 +19,7 @@ import myUpload from 'vue-image-crop-upload'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
 export default {
-  name: 'EditAvatar',
+  name: 'edit-avatar',
   components: {
     PanThumb,
     myUpload

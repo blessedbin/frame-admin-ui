@@ -19,7 +19,7 @@
 import editAvatar from './edit-avatar'
 import changePassword from './change-password'
 export default {
-  name: 'Index',
+  name: 'index',
   components: {
     editAvatar,
     changePassword

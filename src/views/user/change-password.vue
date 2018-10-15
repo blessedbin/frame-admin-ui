@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: 'ChangePassword',
+  name: 'change-password',
   data() {
     const validateOldPass = (rule, value, callback) => {
       if (value === '') {

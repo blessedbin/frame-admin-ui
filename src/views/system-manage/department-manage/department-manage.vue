@@ -96,7 +96,7 @@
 <script>
 import departmentTree from './department-tree'
 export default {
-  name: 'DepartmentManage',
+  name: 'department-manage',
   components: {
     departmentTree
   },

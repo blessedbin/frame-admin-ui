@@ -14,7 +14,7 @@
 <script>
 import datatable from '@/components/DataTable/datatable.vue'
 export default {
-  name: 'ApiManage',
+  name: 'api-manage',
   components: {
     datatable
   },

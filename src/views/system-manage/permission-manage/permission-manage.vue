@@ -15,7 +15,7 @@
 <script>
 import datatable from '@/components/DataTable/datatable.vue'
 export default {
-  name: 'PermissionManage',
+  name: 'permission-manage',
   components: {
     datatable
   },

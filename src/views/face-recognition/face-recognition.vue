@@ -35,7 +35,7 @@ import Stomp from 'webstomp-client'
 import { getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'FaceRecognition',
+  name: 'face-recognition',
   data() {
     return {
       video: {},

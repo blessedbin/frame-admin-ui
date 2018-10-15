@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'SystemLog'
+  name: 'system-log'
 }
 </script>
 

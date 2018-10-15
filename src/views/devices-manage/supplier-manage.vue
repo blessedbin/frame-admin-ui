@@ -5,11 +5,18 @@
       <div slot="button">
         <el-button size="mini" type="primary" @click="handleAddButton">添加</el-button>
       </div>
+
+      <el-table-column label="操作" width="150px" fixed="right">
+        <template slot-scope="scope">
+          <el-button type="primary" round size="mini" @click="handleEditRow(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" round @click="handleDeleteRow(scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
     </datatable>
 
     <!--添加对话框-->
     <el-dialog
-      title="添加供应商" width="600px" :visible.sync="dialogAddSupplier.visible">
+      title="添加" width="600px" :visible.sync="dialogAddSupplier.visible">
       <div>
         <el-form :model="dialogAddSupplier.data" ref="form" label-width="100px" size="small" :rules="dialogAddSupplier.rules">
           <el-form-item label="名称" prop="name">
@@ -34,6 +41,8 @@
         <el-button type="primary" @click="handleSupplierSubmit">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!--修改-->
   </div>
 </template>
 
@@ -46,7 +55,7 @@ export default {
   },
   data() {
     return {
-      baseUrl: '/api/devices-management/devices/supplier',
+      baseUrl: '/api/devices-management/devices/organization/supplier',
       columns: [
         {
           label: '名称',
@@ -94,6 +103,22 @@ export default {
         self.$message.success(response.message)
         self.dialogAddSupplier.visible = false
         self.$refs.datatable.refreshData()
+      })
+    },
+    handleEditRow(row) {
+    },
+    handleDeleteRow(row) {
+      const self = this
+      const organizationId = row.organizationId
+      this.$confirm('删除, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        self.$request.delete(self.baseUrl + '/' + organizationId).then(response => {
+          self.$message.success(response.message)
+          self.$refs.datatable.refreshData() // 刷新数据
+        })
       })
     }
   }

@@ -31,7 +31,7 @@
 import screenfull from 'screenfull'
 
 export default {
-  name: 'Screenfull',
+  name: 'screenfull',
   props: {
     width: {
       type: Number,

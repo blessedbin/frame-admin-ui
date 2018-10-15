@@ -8,7 +8,7 @@
 <script>
 // import { getToken } from '@/utils/auth'
 export default {
-  name: 'ApiDocs',
+  name: 'api-docs',
   data() {
     return {
       url: 'http://localhost:8080/swagger-ui.html'

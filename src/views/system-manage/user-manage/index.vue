@@ -84,7 +84,7 @@
 <script>
 import request from '@/utils/request'
 export default {
-  name: 'ManageUserIndex',
+  name: 'manage-user-index',
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {

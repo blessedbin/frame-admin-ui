@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'ServiceMonitor'
+  name: 'service-monitor'
 }
 </script>
 

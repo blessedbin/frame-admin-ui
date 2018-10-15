@@ -7,7 +7,7 @@
 <script>
 import PanelGroup from './components/PanelGroup'
 export default {
-  name: 'Index',
+  name: 'index',
   components: {
     PanelGroup
   }
