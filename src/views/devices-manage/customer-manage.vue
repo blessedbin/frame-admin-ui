@@ -16,57 +16,57 @@
 
     <!--添加对话框-->
     <el-dialog
-      title="添加" width="600px" :visible.sync="dialogAddSupplier.visible">
+      title="添加" width="600px" :visible.sync="dialogAddcustomer.visible">
       <div>
-        <el-form :model="dialogAddSupplier.data" ref="form" label-width="100px" size="small" :rules="dialogAddSupplier.rules">
+        <el-form :model="dialogAddcustomer.data" ref="form" label-width="100px" size="small" :rules="dialogAddcustomer.rules">
           <el-form-item label="名称" prop="name">
-            <el-input v-model="dialogAddSupplier.data.name"></el-input>
+            <el-input v-model="dialogAddcustomer.data.name"></el-input>
           </el-form-item>
           <el-form-item label="联系地址" prop="address">
-            <el-input v-model="dialogAddSupplier.data.address"></el-input>
+            <el-input v-model="dialogAddcustomer.data.address"></el-input>
           </el-form-item>
           <el-form-item label="联系人姓名" prop="contactsName">
-            <el-input v-model="dialogAddSupplier.data.contactsName"></el-input>
+            <el-input v-model="dialogAddcustomer.data.contactsName"></el-input>
           </el-form-item>
           <el-form-item label="联系人电话" prop="cantactsPhone">
-            <el-input v-model="dialogAddSupplier.data.cantactsPhone"></el-input>
+            <el-input v-model="dialogAddcustomer.data.cantactsPhone"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="dialogAddSupplier.data.remark" type="textarea"></el-input>
+            <el-input v-model="dialogAddcustomer.data.remark" type="textarea"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogAddSupplier.visible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSupplierSubmit">确 定</el-button>
+        <el-button @click="dialogAddcustomer.visible = false">取 消</el-button>
+        <el-button type="primary" @click="handlecustomerSubmit">确 定</el-button>
       </span>
     </el-dialog>
 
     <!--修改-->
     <el-dialog
-      title="修改" width="600px" :visible.sync="dialogEditSupplier.visible">
+      title="修改" width="600px" :visible.sync="dialogEditcustomer.visible">
       <div>
-        <el-form :model="dialogEditSupplier.data" ref="form" label-width="100px" size="small" :rules="dialogEditSupplier.rules">
+        <el-form :model="dialogEditcustomer.data" ref="form" label-width="100px" size="small" :rules="dialogEditcustomer.rules">
           <el-form-item label="名称" prop="name">
-            <el-input v-model="dialogEditSupplier.data.name"></el-input>
+            <el-input v-model="dialogEditcustomer.data.name"></el-input>
           </el-form-item>
           <el-form-item label="联系地址" prop="address">
-            <el-input v-model="dialogEditSupplier.data.address"></el-input>
+            <el-input v-model="dialogEditcustomer.data.address"></el-input>
           </el-form-item>
           <el-form-item label="联系人姓名" prop="contactsName">
-            <el-input v-model="dialogEditSupplier.data.contactsName"></el-input>
+            <el-input v-model="dialogEditcustomer.data.contactsName"></el-input>
           </el-form-item>
           <el-form-item label="联系人电话" prop="cantactsPhone">
-            <el-input v-model="dialogEditSupplier.data.cantactsPhone"></el-input>
+            <el-input v-model="dialogEditcustomer.data.cantactsPhone"></el-input>
           </el-form-item>
           <el-form-item label="备注" prop="remark">
-            <el-input v-model="dialogEditSupplier.data.remark" type="textarea"></el-input>
+            <el-input v-model="dialogEditcustomer.data.remark" type="textarea"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogEditSupplier.visible = false">取 消</el-button>
-        <el-button type="primary" @click="handleEditSupplierSubmit">确 定</el-button>
+        <el-button @click="dialogEditcustomer.visible = false">取 消</el-button>
+        <el-button type="primary" @click="handleEditcustomerSubmit">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -75,13 +75,13 @@
 <script>
 import datatable from '@/components/DataTable/datatable.vue'
 export default {
-  name: 'supplier-manage',
+  name: 'customer-manage',
   components: {
     datatable
   },
   data() {
     return {
-      baseUrl: '/api/devices-management/devices/organization/supplier',
+      baseUrl: '/api/devices-management/devices/organization/customer',
       columns: [
         {
           label: '名称',
@@ -120,7 +120,7 @@ export default {
           prop: 'remark'
         }
       ],
-      dialogAddSupplier: {
+      dialogAddcustomer: {
         visible: false,
         data: {
           name: '',
@@ -130,7 +130,7 @@ export default {
           remark: ''
         }
       },
-      dialogEditSupplier: {
+      dialogEditcustomer: {
         visible: false,
         data: {
           name: '',
@@ -146,28 +146,28 @@ export default {
   created() {},
   methods: {
     handleAddButton() {
-      this.dialogAddSupplier.visible = true
+      this.dialogAddcustomer.visible = true
     },
-    handleSupplierSubmit() {
+    handlecustomerSubmit() {
       const self = this
-      self.$request.post(this.baseUrl, self.dialogAddSupplier.data).then(response => {
+      self.$request.post(this.baseUrl, self.dialogAddcustomer.data).then(response => {
         self.$message.success(response.message)
-        self.dialogAddSupplier.visible = false
+        self.dialogAddcustomer.visible = false
         self.$refs.datatable.refreshData()
       })
     },
-    handleEditSupplierSubmit() {
+    handleEditcustomerSubmit() {
       const self = this
-      self.$request.put(self.baseUrl + '/' + self.dialogEditSupplier.data.organizationId, self.dialogEditSupplier.data).then(response => {
+      self.$request.put(self.baseUrl + '/' + self.dialogEditcustomer.data.organizationId, self.dialogEditcustomer.data).then(response => {
         self.$message.success(response.message)
-        self.dialogEditSupplier.visible = false
+        self.dialogEditcustomer.visible = false
         self.$refs.datatable.refreshData()
       })
     },
     handleEditRow(row) {
       const self = this
-      self.dialogEditSupplier.data = row
-      self.dialogEditSupplier.visible = true
+      self.dialogEditcustomer.data = row
+      self.dialogEditcustomer.visible = true
     },
     handleDeleteRow(row) {
       const self = this

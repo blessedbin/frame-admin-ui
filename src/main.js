@@ -30,6 +30,9 @@ Vue.config.productionTip = false
 Vue.prototype.$request = request
 // 全局日期过滤器
 Vue.filter('dateFormat', function(value) {
+  if (value == null) {
+    return ''
+  }
   const date = new Date(value)
   return formatDate(date, 'yyyy-MM-dd hh:mm')
 })
