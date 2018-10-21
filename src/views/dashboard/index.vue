@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <admin-dashboard></admin-dashboard>
     <div class="dashboard-text">name:{{ name }}</div>
-    <div class="dashboard-text">info:<pre>{{ info }}</pre></div>
+    <div class="dashboard-text" v-if="env === 'development'">info:<pre>{{ info }}</pre></div>
   </div>
 </template>
 
@@ -13,6 +13,11 @@ export default {
   name: 'dashboard',
   components: {
     adminDashboard
+  },
+  data() {
+    return {
+      env: process.env.NODE_ENV
+    }
   },
   computed: {
     ...mapGetters([

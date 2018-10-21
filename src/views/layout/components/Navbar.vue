@@ -35,8 +35,8 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import store from '@/store'
-// import { getToken } from '@/utils/auth'
+// import store from '@/store'
+import { getToken } from '@/utils/auth'
 import Screenfull from '@/components/Screenfull'
 
 export default {
@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      avatar: store.getters.avatar
+      avatar: '/api/user/avatar?access_token=' + getToken()
     }
   },
   computed: {

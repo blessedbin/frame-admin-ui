@@ -12,16 +12,21 @@
       title="生成激活码" width="600px" :visible.sync="dialogGenerateCode.visible">
       <div>
         <el-form :model="dialogGenerateCode.data" ref="form" label-width="100px" size="small" :rules="dialogGenerateCode.rules">
-          <el-form-item label="激活码数量" prop="number">
+          <el-form-item label="注册数量" prop="number">
             <el-input v-model="dialogGenerateCode.data.number" type="number"></el-input>
+          </el-form-item>
+          <el-form-item label="设备型号">
+            <el-autocomplete v-model="dialogGenerateCode.data.deviceTypeName" :fetch-suggestions="deviceTypeQuerySearchAsync"
+                             placeholder="请输入" value-key="name"
+                             @select="handleDeviceTypeSelect">
+              <template slot-scope="{ item }">
+                <div class="text-overflow: ellipsis;overflow: hidden;">{{ item.name }}-{{ item.type }}</div>
+              </template>
+            </el-autocomplete>
           </el-form-item>
           <el-form-item label="销售商">
             <el-autocomplete v-model="dialogGenerateCode.data.retailerName" :fetch-suggestions="retailerQuerySearchAsync" placeholder="请输入" value-key="name"
                              @select="handleRetailerSelect"></el-autocomplete>
-          </el-form-item>
-          <el-form-item label="客户">
-            <el-autocomplete v-model="dialogGenerateCode.data.customerName" :fetch-suggestions="customerQuerySearchAsync" placeholder="请输入" value-key="name"
-                             @select="handleCustomerSelect"></el-autocomplete>
           </el-form-item>
         </el-form>
       </div>
@@ -33,11 +38,16 @@
     <!--导出Excel-->
     <el-dialog
       title="生成成功" width="600px" :visible.sync="dialogExportExcel.visible">
-      <el-button @click="() => {
-        dialogExportExcel.visible = false
-        dialogGenerateCode.visible = false
-      }">关 闭</el-button>
-      <el-button type="primary" @click="exportExcel">导出Excel文件</el-button>
+      <div>
+        <el-input v-model="dialogExportExcel.code"></el-input>
+      </div>
+      <span slot="footer">
+        <el-button @click="() => {
+          dialogExportExcel.visible = false
+          dialogGenerateCode.visible = false
+        }">关 闭</el-button>
+      </span>
+      <!--<el-button type="primary" @click="exportExcel">导出Excel文件</el-button>-->
     </el-dialog>
   </div>
 </template>
@@ -60,25 +70,13 @@ export default {
           width: 150
         },
         {
-          label: '注册状态',
-          prop: 'devicesId',
-          width: 150,
-          render: function(row) {
-            if (row.devicesId === null) {
-              return '未注册'
-            } else {
-              return row.devicesId
-            }
-          }
-        },
-        {
           label: '销售商',
           prop: 'retailerName',
           width: 150
         },
         {
-          label: '客户',
-          prop: 'customerName',
+          label: '剩余数量',
+          prop: 'times',
           width: 150
         },
         {
@@ -104,11 +102,14 @@ export default {
           customerId: '',
           customerName: '',
           remark: '',
-          number: 1
+          number: 1,
+          deviceTypeId: '',
+          deviceTypeName: ''
         }
       },
       dialogExportExcel: {
-        visible: false
+        visible: false,
+        code: ''
       }
     }
   },
@@ -124,6 +125,7 @@ export default {
         // self.dialogGenerateCode.visible = false
         self.generatedCode = response.data
         self.dialogExportExcel.visible = true
+        self.dialogExportExcel.code = self.generatedCode.registrationCode
       })
     },
     retailerQuerySearchAsync(qs, callback) {
@@ -132,9 +134,10 @@ export default {
         callback(response.data)
       })
     },
-    customerQuerySearchAsync(qs, callback) {
+    deviceTypeQuerySearchAsync(qs, callback) {
       const self = this
-      self.$request.get('/api/devices-management/devices/organization/customer?queryString=' + qs).then(response => {
+      self.$request.get('/api/devices-management/devices/db-device-type/query?queryString=' + qs).then(response => {
+        console.log(response.data)
         callback(response.data)
       })
     },
@@ -142,9 +145,9 @@ export default {
       this.dialogGenerateCode.data.retailerId = item.organizationId
       this.dialogGenerateCode.data.retailerName = item.name
     },
-    handleCustomerSelect(item) {
-      this.dialogGenerateCode.data.customerId = item.organizationId
-      this.dialogGenerateCode.data.customerName = item.name
+    handleDeviceTypeSelect(item) {
+      this.dialogGenerateCode.data.deviceTypeName = item.name + '-' + item.type
+      this.dialogGenerateCode.data.deviceTypeId = item.id
     },
     exportExcel() {
       const self = this
