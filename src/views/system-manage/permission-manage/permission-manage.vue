@@ -1,66 +1,68 @@
 <template>
-  <div class="main-contain-holder">
-
-    <datatable :columns="columns" :url="baseUrl" title="API列表" ref="datatable">
-
-      <el-table-column label="操作" width="70px" fixed="right">
-        <template slot-scope="scope">
-          <el-button type="danger" size="mini" round @click="handleDeleteRow(scope.row)">删除</el-button>
+  <div>
+    <div style="padding-bottom: 5px">
+      <el-button type="primary" size="small" @click="loadMenuTreeData">刷新</el-button>
+    </div>
+    <tree-table :data="treeData.data" :expand-all="expandAll" border v-loading="treeData.loading">
+      <el-table-column type="expand" slot="head">
+        <template slot-scope="props">
+          <el-tag
+            v-for="tag in tags"
+            :key="tag.name"
+            closable
+            :type="tag.type">
+            {{ tag.name }}
+          </el-tag>
         </template>
       </el-table-column>
-    </datatable>
+      <el-table-column label="标题" prop="title"></el-table-column>
+      <el-table-column label="启用" prop="enabled"></el-table-column>
+      <el-table-column label="权限点"></el-table-column>
+    </tree-table>
   </div>
 </template>
 
 <script>
-import datatable from '@/components/DataTable/datatable.vue'
+import treeTable from '@/components/TreeTable'
+import treeToArray from './customEval'
 export default {
   name: 'permission-manage',
-  components: {
-    datatable
-  },
+  components: { treeTable },
   data() {
     return {
-      baseUrl: '/api/ucenter/sys/permission',
-      columns: [
-        {
-          label: '名称',
-          prop: 'name'
+      func: treeToArray,
+      args: [null, null, 'timeLine'],
+      expandAll: false,
+      treeData: {
+        data: [],
+        defaultProps: {
+          children: 'children',
+          label: 'title'
         },
-        {
-          label: 'code',
-          prop: 'code'
-        },
-        {
-          label: 'type',
-          prop: 'type'
-        },
-        {
-          label: 'enabled',
-          prop: 'enabled'
-        }
+        loading: false
+      },
+      tags: [
+        { name: '标签一', type: '' },
+        { name: '标签二', type: 'success' },
+        { name: '标签三', type: 'info' },
+        { name: '标签四', type: 'warning' },
+        { name: '标签五', type: 'danger' }
       ]
     }
   },
-  watch: {
-  },
   mounted() {
+    this.loadMenuTreeData()
   },
   methods: {
-    handleDeleteRow(row) {
-      const id = row.id
+    loadMenuTreeData() {
       const self = this
-      this.$confirm('删除, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        self.$request.delete(self.baseUrl + '/' + id).then(response => {
-          self.$message.success(response.message)
-          self.$refs.datatable.refreshData()
-        })
+      self.treeData.loading = true
+      self.$request.get('/api/ucenter/sys/menu/menu_tree.json').then(response => {
+        self.treeData.data = response.data.treeList
+        self.treeData.loading = false
       })
-    }
+    },
+    treeNodeClick(data) {}
   }
 }
 </script>
