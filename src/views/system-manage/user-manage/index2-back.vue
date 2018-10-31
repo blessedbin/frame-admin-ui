@@ -1,12 +1,11 @@
 <template>
   <div class="main-contain-holder">
 
-    <frame-datatable :config="config" :show-index="false">
-
+    <datatable :columns="columns" :url="baseUrl" ref="datatable" :show-edit-row-button="false" :show-delete-row-button="false"
+               title="用户列表">
       <div slot="button">
-        <el-button type="primary" size="small" @click="dialogAddUser.visible = true">添加</el-button>
+        <el-button size="mini" type="primary" @click="dialogAddUser.visible = true">添加</el-button>
       </div>
-
       <div>
         <el-table-column label="操作" width="200px" fixed="right">
           <template slot-scope="scope">
@@ -23,7 +22,7 @@
           </template>
         </el-table-column>
       </div>
-    </frame-datatable>
+    </datatable>
 
     <!--添加用户-->
     <el-dialog
@@ -82,43 +81,43 @@
 </template>
 
 <script>
-import frameDatatable from '@/components/DataTable/frameDatatable.vue'
+import datatable from '@/components/DataTable/datatable.vue'
 export default {
   name: 'index2',
   components: {
-    frameDatatable
+    datatable
   },
   data() {
     return {
       baseUrl: '/api/ucenter/sys/user',
-      config: {
-        columns: [
-          {
-            label: '用户名',
-            prop: 'username',
-            width: 150
-          },
-          {
-            label: '创建时间',
-            prop: 'createTime',
-            filter: 'dateFormat'
-          },
-          {
-            label: 'email',
-            prop: 'email',
-            width: 200
-          },
-          {
-            label: 'phone',
-            prop: 'phone'
-          },
-          {
-            label: '备注',
-            prop: 'remark'
-          }
-        ],
-        data: '/api/ucenter/sys/user/datatable.json'
-      },
+      columns: [
+        {
+          label: '用户名',
+          prop: 'username',
+          width: 150
+        },
+        {
+          label: '创建时间',
+          prop: 'createTime',
+          filter: 'dateFormat'
+        },
+        {
+          label: 'email',
+          prop: 'email'
+        },
+        {
+          label: 'phone',
+          prop: 'phone'
+        },
+        {
+          label: '组织名称',
+          prop: 'organizationId'
+        },
+        {
+          label: '备注',
+          prop: 'remark'
+        }
+      ],
       dialogAddUser: {
         visible: false,
         data: {

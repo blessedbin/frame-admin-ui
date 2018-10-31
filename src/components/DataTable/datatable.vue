@@ -31,8 +31,7 @@
                   :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange"
                   :row-class-name="tableRowClassName" @row-click="checkImage" ref="table"
                   v-loading="loading">
-          <el-table-column type="selection" width="55" v-if="checkBox">
-          </el-table-column>
+          <el-table-column type="selection" width="55" v-if="checkBox"></el-table-column>
           <el-table-column label="ID" align="center" type="index" width="100" v-if="showIndex"></el-table-column>
           <el-table-column :label="column.label"
                            :prop="column.prop"
