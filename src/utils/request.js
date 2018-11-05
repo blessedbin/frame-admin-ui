@@ -27,7 +27,6 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    console.log(process.env.NODE_ENV)
     /**
      * code为非20000是抛错 可结合自己业务进行修改
      */

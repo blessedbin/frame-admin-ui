@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="formatData" :row-style="showRow" v-bind="$attrs">
+  <el-table :data="formatData" :row-style="showRow" v-bind="$attrs" @expand-change="tableExpandChange">
     <slot name="head"/>
     <el-table-column v-if="columns.length===0" width="150">
       <template slot-scope="scope">
@@ -80,6 +80,9 @@ export default {
     // 图标显示
     iconShow(index, record) {
       return (index === 0 && record.children && record.children.length > 0)
+    },
+    tableExpandChange(row, expandedRows) {
+      this.$emit('expand-change',row, expandedRows)
     }
   }
 }
