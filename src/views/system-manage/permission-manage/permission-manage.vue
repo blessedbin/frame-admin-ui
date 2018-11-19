@@ -9,7 +9,7 @@
       <el-table-column label="权限点">
         <template slot-scope="props">
           <div style="display: inline" v-if="props.row.isLeaf">
-            <el-button-group v-for="tag in tags[props.row.id]" :key="tag.id" style="padding-left:5px;">
+            <el-button-group v-for="tag in tags[props.row.id]" :key="tag.id" style="padding-left:5px; padding-bottom: 5px;">
               <el-button type="primary" plain size="mini" @click="handleEditOperationApiClick(props.row)">{{ tag.name }}</el-button>
               <el-button type="danger" plain icon="el-icon-delete" size="mini"></el-button>
             </el-button-group>
@@ -45,20 +45,21 @@
       title="添加" width="1000px" :visible.sync="dialogEditOperationApi.visible">
       <div>
         <div style="padding-bottom: 5px;">
-          <span>系统：</span>
-          <el-select size="small">
-            <el-option v-for="item in dialogEditOperationApi.tagOptions" :key="item.value"
+          <span>服务ID：</span>
+          <el-select size="small" v-model="dialogEditOperationApi.serviceIdSelection" multiple :value="dialogEditOperationApi.serviceIdSelection">
+            <el-option v-for="item in dialogEditOperationApi.serviceIdOptions" :key="item.value"
                        :label="item.label"
                        :value="item.value">
             </el-option>
           </el-select>
           <span>标签：</span>
-          <el-select size="small">
+          <el-select size="small" v-model="dialogEditOperationApi.tagSelection" multiple :value="dialogEditOperationApi.tagSelection">
             <el-option v-for="item in dialogEditOperationApi.tagOptions" :key="item.value"
                        :label="item.label"
                        :value="item.value">
             </el-option>
           </el-select>
+          <el-button size="small" @click="dialogEditOperationApiSearch">搜索</el-button>
         </div>
         <el-table ref="multipleTable" :data="dialogEditOperationApi.tableData" tooltip-effect="dark" style="width: 100%"
                   @selection-change="handleSelectionChange">
@@ -67,6 +68,7 @@
           <el-table-column label="method" prop="method"></el-table-column>
           <el-table-column prop="name" label="名称"></el-table-column>
           <el-table-column prop="tags" label="标签" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="serviceId" label="服务ID" show-overflow-tooltip></el-table-column>
         </el-table>
         <div class="block" style="padding:15px;">
           <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" style="float: right;"
@@ -141,7 +143,10 @@ export default {
           pageSize: 10,
           total: 0
         },
-        tagOptions: []
+        tagOptions: [],
+        tagSelection: [],
+        serviceIdOptions: [],
+        serviceIdSelection: []
       }
     }
   },
@@ -219,6 +224,9 @@ export default {
       self.$request.get('/api/ucenter/sys/api/tag_options.json').then(response => {
         self.dialogEditOperationApi.tagOptions = response.data
       })
+      self.$request.get('/api/ucenter/sys/api/serviceID_options.json').then(response => {
+        self.dialogEditOperationApi.serviceIdOptions = response.data
+      })
     },
     handleSizeChange(size) {
       this.dialogEditOperationApi.pagination.pageSize = size
@@ -233,7 +241,11 @@ export default {
         this.handleEditOperationApiClick(this.dialogEditOperationApi.currentRow)
       }
     },
-    handleSelectionChange() {}
+    handleSelectionChange() {},
+    dialogEditOperationApiSearch() {
+      console.log(this.dialogEditOperationApi.tagSelection.join(','))
+      console.log(this.dialogEditOperationApi.serviceIdSelection.join(','))
+    }
   }
 }
 </script>
