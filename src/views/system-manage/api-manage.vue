@@ -23,36 +23,30 @@ export default {
       baseUrl: '/api/ucenter/sys/api',
       columns: [
         {
-          label: '权限名称',
+          label: 'API',
           prop: 'name'
         },
         {
-          label: 'API地址',
+          label: 'URL',
           prop: 'url'
         },
         {
-          label: '请求方式',
+          label: 'METHOD',
           prop: 'method',
           width: 100
         },
         {
-          label: '唯一编码',
+          label: 'CODE',
           prop: 'code'
         },
         {
-          label: '标签',
+          label: 'TAG',
           prop: 'tags'
+        },
+        {
+          label: 'SERVICE ID',
+          prop: 'serviceId'
         }
-        /* {
-              label: '创建时间',
-              prop: 'createTime',
-              filter: 'dateFormat'
-            },
-            {
-              label: '更新时间',
-              prop: 'updateTime',
-              filter: 'dateFormat'
-            } */
       ]
     }
   },

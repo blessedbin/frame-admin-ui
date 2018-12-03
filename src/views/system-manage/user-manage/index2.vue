@@ -92,11 +92,13 @@ export default {
     return {
       baseUrl: '/api/ucenter/sys/user',
       config: {
+        showOptionsColumns: true, // 是否显示show选项为"options"的列
         columns: [
           {
             label: '用户名',
             prop: 'username',
-            width: 150
+            width: 150,
+            show: 'always' // 默认是option
           },
           {
             label: '创建时间',

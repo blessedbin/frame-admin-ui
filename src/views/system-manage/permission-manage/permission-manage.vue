@@ -42,7 +42,7 @@
 
     <!--编辑功能点的API-->
     <el-dialog
-      title="添加" width="1000px" :visible.sync="dialogEditOperationApi.visible">
+      title="修改" width="1000px" :visible.sync="dialogEditOperationApi.visible">
       <div>
         <div style="padding-bottom: 5px;">
           <span>服务ID：</span>
@@ -61,8 +61,8 @@
           </el-select>
           <el-button size="small" @click="dialogEditOperationApiSearch">搜索</el-button>
         </div>
-        <el-table ref="multipleTable" :data="dialogEditOperationApi.tableData" tooltip-effect="dark" style="width: 100%"
-                  @selection-change="handleSelectionChange">
+        <el-table size="small" ref="multipleTable" :data="dialogEditOperationApi.tableData" tooltip-effect="dark" style="width: 100%"
+                  @selection-change="handleSelectionChange" @select="handleSelect" @select-all="selectAll">
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="url" prop="url"></el-table-column>
           <el-table-column label="method" prop="method"></el-table-column>
@@ -77,10 +77,14 @@
                          :total="dialogEditOperationApi.pagination.total">
           </el-pagination>
         </div>
+        <div>
+          <span>已选：</span>
+          <el-tag v-for="(val, key) in dialogEditOperationApi.alreadySelected" :key="key">{{ val.url + '[' + val.method + ']' }}</el-tag>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogEditOperationApi.visible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAddOperationSubmit">确 定</el-button>
+        <el-button @click="dialogEditOperationApi.visible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="handleAddOperationSubmit" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -146,7 +150,8 @@ export default {
         tagOptions: [],
         tagSelection: [],
         serviceIdOptions: [],
-        serviceIdSelection: []
+        serviceIdSelection: [],
+        alreadySelected: {} // 已选项
       }
     }
   },
@@ -241,7 +246,32 @@ export default {
         this.handleEditOperationApiClick(this.dialogEditOperationApi.currentRow)
       }
     },
-    handleSelectionChange() {},
+    handleSelectionChange(selection) {
+      console.log(selection)
+    },
+    handleSelect(selection, row) {
+      if (selection.indexOf(row) >= 0) {
+        // 勾选
+        Vue.set(this.dialogEditOperationApi.alreadySelected, row.id, row)
+      } else {
+        // 取消勾选
+        Vue.delete(this.dialogEditOperationApi.alreadySelected, row.id)
+      }
+      console.log('-----alreadySelected-------')
+      console.log(this.dialogEditOperationApi.alreadySelected)
+    },
+    selectAll(selection) {
+      if (selection.length === 0) {
+        // 清空
+        this.dialogEditOperationApi.tableData.forEach(value => {
+          Vue.delete(this.dialogEditOperationApi.alreadySelected, value.id)
+        })
+      } else {
+        selection.forEach(value => {
+          Vue.set(this.dialogEditOperationApi.alreadySelected, value.id, value)
+        })
+      }
+    },
     dialogEditOperationApiSearch() {
       console.log(this.dialogEditOperationApi.tagSelection.join(','))
       console.log(this.dialogEditOperationApi.serviceIdSelection.join(','))
